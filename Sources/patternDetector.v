@@ -24,6 +24,7 @@ module patternDetector (
     reg fourLock, threeLock, twoLock, oneLock, zeroLock, setZeroNextClock;
     // Enter loop every positive edge of clock 
     always @(posedge clk) begin
+        // Only write high if it matches
         if(lfsr[21] ^~ pattern[10]) tenLock = 0; else tenLock = 1;
         if(lfsr[20] ^~ pattern[9] && tenLock == 0) nineLock = 0; else nineLock = 1;
         if(lfsr[19] ^~ pattern[8] && nineLock == 0) eightLock = 0; else eightLock = 1;

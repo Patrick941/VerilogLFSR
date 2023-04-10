@@ -42,10 +42,12 @@ module lfsr (
             // Iterate lfsr once and if loopTracker exceeds a certain amount reset max_tick
             tempVector = outputVector;
             loopTracker <= loopTracker + 1;
+            // At max tick set max tick high
             if (loopTracker >= 4194303) begin
                 max_tick <= 1'b1;
                 loopTracker <= 0;
             end
+            // do nothing for testing
             else begin
                 //max_tick <= 1'b0;
             end
@@ -55,6 +57,7 @@ module lfsr (
             outputVector <= {tempVector[20:0], tempVal}; 
             lfsr_full_out <= outputVector;
         end else if (reset == 1) begin
+            // Doesn't work correctly
             tempVector = seed;
             outputVector = seed;
         end else begin

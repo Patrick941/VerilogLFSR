@@ -31,8 +31,10 @@ module peripheralController (
     initial clockScale = 5000000;
     reg [31:0] testVal;
 
+    // scale clock
     clockDivider clock_unit(.clk(clk), .clk_out(scaled_clock), .clkscale(clockScale));
 
+    // test function, serves no purpose
     always @ (posedge scaled_clock) begin
         testVal = testVal + 1;
         if(max_tick == 1'b1 && button_input[4] == button_pressed) begin
@@ -42,12 +44,16 @@ module peripheralController (
 
     initial testVal = 0;
 
+    // read lfsr
     lfsr lsft_unit(.clk(scaled_clock), .reset(reset), .lfsr_out(lfsr_out), .max_tick(max_tick), .lfsr_full_out(lfsr_full_out));
 
+    // check if lfsr matches
     patternDetector patternDetector_unit(.clk(scaled_clock), .reset(reset), .lfsr(lfsr_full_out), .loop(max_tick), .counter(counter));
 
+    // write counter onto seven seg
     seven_segment_controller seven_segment_controller_unit(.clk(clk), .reset(reset), .counter(counter), .anode_select(anode_select), .LED_out(LED_out));
 
+    // write lfsr to leds
     assign led = lfsr_full_out[21: 6];
     //assign led = lfsr_full_out[15:0];
     //assign led = testVal[15:0];
